@@ -16,7 +16,10 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
 
   init {
     //We can't use an InMemoryDb because that cannot load extensions, so delete the older database file to recreate the data
-    SQLiteDatabase.deleteDatabase(File("data/data/${context.packageName}/databases/app.db"))
+    val file = File("data/data/${context.packageName}/databases/app.db")
+    if(file.exists() && file.isFile) {
+      SQLiteDatabase.deleteDatabase(file)
+    }
   }
 
   override fun onCreate(db: SQLiteDatabase) {

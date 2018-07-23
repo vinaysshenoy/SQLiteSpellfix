@@ -51,7 +51,7 @@ class AppDatabaseActivity : AppCompatActivity() {
 
         val (items, duration) = result
 
-        text_items.text = getString(R.string.display_results, items.joinToString("\n") { "${it.text}, ${it.editDistance}" }, duration)
+        text_items.text = getString(R.string.display_results, items.joinToString("\n") { "${it.text} => ${it.editDistance}" }, duration)
       }
     }
 

@@ -83,7 +83,7 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
   fun items(search: String = ""): List<ReadItem> {
     return readableDatabase
         .query("""
-          select * from "Test" where "searchText" like '%$search%'
+          select *, editdist3('$search', "searchText") as "editDist" from "Test" where ("searchText" like '%$search%') or (editDist < 1000) order by "editDist" asc
         """.trimIndent()
         ).run {
           use {
@@ -92,7 +92,7 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
                 ReadItem(
                     id = UUID.fromString(getString(getColumnIndex("id"))),
                     text = getString(getColumnIndex("text1")),
-                    editDistance = 0
+                    editDistance = getInt(getColumnIndex("editDist"))
                 )
               } else null
             }.toList()

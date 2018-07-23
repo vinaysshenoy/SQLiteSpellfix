@@ -7,11 +7,17 @@ import io.requery.android.database.sqlite.SQLiteCustomExtension
 import io.requery.android.database.sqlite.SQLiteDatabase
 import io.requery.android.database.sqlite.SQLiteDatabaseConfiguration
 import io.requery.android.database.sqlite.SQLiteOpenHelper
+import java.io.File
 import java.util.UUID
 
 private const val LOG_TAG = "AppSqliteHelper"
 
 class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", null, 1) {
+
+  init {
+    //We can't use an InMemoryDb because that cannot load extensions, so delete the older database file to recreate the data
+    SQLiteDatabase.deleteDatabase(File("data/data/${context.packageName}/databases/app.db"))
+  }
 
   override fun onCreate(db: SQLiteDatabase) {
     Log.d(LOG_TAG, "On Create")

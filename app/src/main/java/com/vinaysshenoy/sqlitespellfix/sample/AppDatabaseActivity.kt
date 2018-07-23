@@ -33,8 +33,8 @@ class AppDatabaseActivity : AppCompatActivity() {
 		@SuppressLint("StaticFieldLeak")
 		val task = object : AsyncTask<Any, Nothing, List<ReadItem>>() {
 			override fun doInBackground(vararg params: Any?) =
-//				(application as App).database.itemsMatching(searchTerm)
-				(application as App).database.items(searchTerm)
+				(application as App).database.itemsMatching(searchTerm)
+//				(application as App).database.items(searchTerm)
 
 			override fun onPostExecute(result: List<ReadItem>) {
 				text_items.text = result.map { "${it.text}, ${it.editDistance}" }

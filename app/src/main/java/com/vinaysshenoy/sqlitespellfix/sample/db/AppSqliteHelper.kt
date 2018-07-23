@@ -24,7 +24,8 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
     db.execSQL(
         """
 			create table "Test" (
-				"id" text primary key,
+        "rowId" integer primary key autoincrement not null,
+				"id" text unique not null,
 				"text1" text not null,
         "searchText" text not null
 			)
@@ -52,7 +53,7 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
 
     db.execSQL(
         """
-			insert into "Demo"("word") select "searchText" from "Test"
+			insert into "Demo"("rowid","word") select "rowId","searchText" from "Test"
 		""".trimIndent()
     )
 
@@ -81,22 +82,20 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
   @WorkerThread
   fun items(search: String = ""): List<ReadItem> {
     return readableDatabase
-        .use {
-          it.query("""
+        .query("""
           select * from "Test" where "searchText" like '%$search%'
         """.trimIndent()
-          ).run {
-            use {
-              generateSequence {
-                if (moveToNext()) {
-                  ReadItem(
-                      id = UUID.fromString(getString(getColumnIndex("id"))),
-                      text = getString(getColumnIndex("text1")),
-                      editDistance = 0
-                  )
-                } else null
-              }.toList()
-            }
+        ).run {
+          use {
+            generateSequence {
+              if (moveToNext()) {
+                ReadItem(
+                    id = UUID.fromString(getString(getColumnIndex("id"))),
+                    text = getString(getColumnIndex("text1")),
+                    editDistance = 0
+                )
+              } else null
+            }.toList()
           }
         }
 
@@ -105,27 +104,26 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
   @WorkerThread
   fun itemsMatching(pattern: String): List<ReadItem> {
     return readableDatabase
-        .use {
-          it
-              .query(
-                  """
-			select "word", editdist3('$pattern', "word") as "editdist" from "Demo" order by "editdist" asc
+        .query(
+            """
+			select "Test"."text1", editdist3('$pattern', "word") as "editdist"
+        from "Demo" inner join "Test" on "Demo"."rowid" = "Test"."rowId"
+        order by "editdist" asc
 		""".trimIndent()
-              )
-              .run {
-                use {
-                  generateSequence {
-                    if (moveToNext()) {
-                      ReadItem(
-                          //									id = UUID.fromString(getString(getColumnIndex("id"))),
-                          id = UUID.randomUUID(),
-                          text = getString(getColumnIndex("word")),
-                          editDistance = getInt(getColumnIndex("editdist"))
-                      )
-                    } else null
-                  }.toList()
-                }
-              }
+        )
+        .run {
+          use {
+            generateSequence {
+              if (moveToNext()) {
+                ReadItem(
+                    //									id = UUID.fromString(getString(getColumnIndex("id"))),
+                    id = UUID.randomUUID(),
+                    text = getString(getColumnIndex("text1")),
+                    editDistance = getInt(getColumnIndex("editdist"))
+                )
+              } else null
+            }.toList()
+          }
         }
   }
 }

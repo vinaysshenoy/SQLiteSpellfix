@@ -1,6 +1,8 @@
 <resources>
   <string name="app_name">SQLite Spellfix</string>
   <string name="nothing_to_see_here">Nothing to see here!</string>
-  <string name="search">Search</string>
+  <string name="search">Spell Fix</string>
+  <string name="search_normal">Fuzzy</string>
   <string name="enter_search_term">Enter search term</string>
+  <string name="display_results">%1$s\n\nTime taken: %2$dms</string>
 </resources>

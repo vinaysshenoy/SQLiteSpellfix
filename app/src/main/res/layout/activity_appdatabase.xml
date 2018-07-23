@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    >
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp">
 
   <Button
-      android:id="@+id/btn_search"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/search"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:labelFor="@id/textfield_searchterm"
-      />
+    android:id="@+id/btn_search_levenshtein"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:labelFor="@id/textfield_searchterm"
+    android:text="@string/search" />
+
+  <Button
+    android:id="@+id/btn_search_fuzzy"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_toLeftOf="@id/btn_search_levenshtein"
+    android:layout_toStartOf="@id/btn_search_levenshtein"
+    android:labelFor="@id/textfield_searchterm"
+    android:text="@string/search_normal" />
 
   <EditText
-      android:id="@+id/textfield_searchterm"
+    android:id="@+id/textfield_searchterm"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/btn_search_fuzzy"
+    android:layout_toLeftOf="@id/btn_search_fuzzy"
+    android:layout_toStartOf="@id/btn_search_fuzzy" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/textfield_searchterm"
+    android:layout_marginTop="8dp">
+
+    <TextView
+      android:id="@+id/text_items"
+      style="@style/TextAppearance.AppCompat.Body2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_alignBottom="@id/btn_search"
-      android:layout_toStartOf="@id/btn_search"
-      android:layout_toLeftOf="@id/btn_search"
-      />
-
-  <TextView
-      android:id="@+id/text_items"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@id/textfield_searchterm"
-      android:layout_marginTop="8dp"
       android:gravity="center"
-      android:hint="@string/nothing_to_see_here"
-      style="@style/TextAppearance.AppCompat.Body2"
-      />
+      android:hint="@string/nothing_to_see_here" />
+
+  </ScrollView>
 
 </RelativeLayout>

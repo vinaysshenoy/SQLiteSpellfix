@@ -106,9 +106,9 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
     return readableDatabase
         .query(
             """
-			select "Test"."text1", editdist3('$pattern', "word") as "editdist"
+			select "Test"."text1", "Demo"."score"
         from "Demo" inner join "Test" on "Demo"."rowid" = "Test"."rowId"
-        order by "editdist" asc
+        where "Demo"."word" match '$pattern*'
 		""".trimIndent()
         )
         .run {
@@ -119,7 +119,7 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
                     //									id = UUID.fromString(getString(getColumnIndex("id"))),
                     id = UUID.randomUUID(),
                     text = getString(getColumnIndex("text1")),
-                    editDistance = getInt(getColumnIndex("editdist"))
+                    editDistance = getInt(getColumnIndex("score"))
                 )
               } else null
             }.toList()

@@ -86,7 +86,7 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
   fun items(search: String = ""): List<ReadItem> {
     return readableDatabase
         .query("""
-          select *, editdist3('$search', "searchText") as "editDist" from "Test" where ("searchText" like '%$search%') or (editDist < 1000) order by "editDist" asc
+          select *, editdist3('$search', "searchText") as "editDist" from "Test" where ("searchText" like '%$search%')
         """.trimIndent()
         ).run {
           use {
@@ -109,9 +109,9 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
     return readableDatabase
         .query(
             """
-			select "Test"."text1", "Demo"."score"
+			select "Test"."text1", "Demo"."score" as score
         from "Demo" inner join "Test" on "Demo"."rowid" = "Test"."rowId"
-        where "Demo"."word" match '$pattern*'
+        where "Demo"."word" match '$pattern*' and score < 500 and top=3
 		""".trimIndent()
         )
         .run {

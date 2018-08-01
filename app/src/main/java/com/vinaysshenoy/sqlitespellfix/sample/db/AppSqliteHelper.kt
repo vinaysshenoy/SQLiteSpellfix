@@ -14,13 +14,13 @@ private const val LOG_TAG = "AppSqliteHelper"
 
 class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", null, 1) {
 
-  init {
+  /*init {
     //We can't use an InMemoryDb because that cannot load extensions, so delete the older database file to recreate the data
     val file = File("data/data/${context.packageName}/databases/app.db")
     if(file.exists() && file.isFile) {
       SQLiteDatabase.deleteDatabase(file)
     }
-  }
+  }*/
 
   override fun onCreate(db: SQLiteDatabase) {
     Log.d(LOG_TAG, "On Create")
@@ -75,8 +75,10 @@ class AppSqliteHelper(context: Context) : SQLiteOpenHelper(context, "app.db", nu
       openFlags: Int
   ): SQLiteDatabaseConfiguration {
     Log.d(LOG_TAG, "On Create Configuration")
-    val config = super.createConfiguration(path, openFlags)
+//    val config = super.createConfiguration(path, openFlags)
 
+	  // Ignore DB name for in memory DB
+	  val config = SQLiteDatabaseConfiguration(SQLiteDatabaseConfiguration.MEMORY_DB_PATH, SQLiteDatabase.CREATE_IF_NECESSARY)
     config.customExtensions.add(SQLiteCustomExtension("libspellfix3.so", "sqlite3_spellfix_init"))
 
     return config
